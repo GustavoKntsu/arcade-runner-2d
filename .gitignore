@@ -1,0 +1,51 @@
+# ==========================================
+# Unity - Cache e ficheiros temporários
+# ==========================================
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+
+# ==========================================
+# Projetos e soluções C# gerados pelo editor
+# ==========================================
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# ==========================================
+# Configurações do VS Code e IDEs
+# ==========================================
+.vscode/
+.vs/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ==========================================
+# Ficheiros do Sistema Operativo
+# ==========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ==========================================
+# Builds e pacotes exportados
+# ==========================================
+*.apk
+*.aab
+*.unitypackage
