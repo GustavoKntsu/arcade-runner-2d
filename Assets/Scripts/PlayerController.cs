@@ -3,34 +3,38 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Configurações de Movimento")]
-    public float velocidadeHorizontal = 5f;
-    public float limiteLateral = 1.3f;
+    public float speed = 5f;
+    public float limiteEsquerda = -1.3f;
+    public float limiteDireitaNormal = 1.3f;
+    public float limiteDireitaPosto = 3.7f; // Permite chegar até X = 3.5 (em cima da bomba do posto)
 
     void Update()
     {
-        // Lê as setas do teclado ou teclas A e D (-1 para esquerda, 1 para direita)
-        float direcaoX = Input.GetAxisRaw("Horizontal");
+        float moveX = Input.GetAxisRaw("Horizontal");
+        Vector3 novaPosicao = transform.position + new Vector3(moveX * speed * Time.deltaTime, 0, 0);
 
-        // Calcula a nova posição horizontal
-        Vector3 novaPosicao = transform.position;
-        novaPosicao.x += direcaoX * velocidadeHorizontal * Time.deltaTime;
+        // Se houver um posto ativo na tela, libera o lado direito para entrar na baia
+        float limiteDireitoAtual = (GameManager.Instance != null && GameManager.Instance.isGasStationOnScreen) 
+            ? limiteDireitaPosto 
+            : limiteDireitaNormal;
 
-        // Trava o carro para não sair do asfalto
-        novaPosicao.x = Mathf.Clamp(novaPosicao.x, -limiteLateral, limiteLateral);
-
-        // Aplica a posição final ao carro
+        novaPosicao.x = Mathf.Clamp(novaPosicao.x, limiteEsquerda, limiteDireitoAtual);
         transform.position = novaPosicao;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Verifica se o objeto que colidiu possui a tag configurada no Prefab do inimigo
         if (other.CompareTag("Obstacle"))
         {
-            Debug.Log("Fim de Jogo! Colisão detectada com: " + other.name);
-            
-            // Pausa o tempo do jogo para demonstrar o impacto (temporário até criarmos a UI de Game Over)
-            Time.timeScale = 0f; 
+            if (GameManager.Instance != null) GameManager.Instance.GameOver();
+        }
+        else if (other.CompareTag("PitStop"))
+        {
+            if (GameManager.Instance != null && !GameManager.Instance.isPitStopping)
+            {
+                GameManager.Instance.isPitStopping = true;
+                other.gameObject.SetActive(false);
+            }
         }
     }
 }
